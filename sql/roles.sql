@@ -1,0 +1,30 @@
+
+/*
+Roles for DocAI
+*/
+USE ROLE ACCOUNTADMIN;
+CREATE or replace ROLE doc_ai_dev;
+GRANT DATABASE ROLE SNOWFLAKE.DOCUMENT_INTELLIGENCE_CREATOR TO ROLE doc_ai_dev;
+
+GRANT USAGE ON DATABASE RETAIL_DEMO TO ROLE doc_ai_dev;
+GRANT USAGE ON SCHEMA RETAIL_DEMO TO ROLE doc_ai_dev;
+
+GRANT CREATE SNOWFLAKE.ML.DOCUMENT_INTELLIGENCE ON SCHEMA Retail_Demo.< schema name> TO ROLE doc_ai_dev;
+GRANT CREATE STREAM, CREATE TABLE, CREATE TASK, CREATE VIEW ON SCHEMA  Retail_Demo.< schema name> TO ROLE doc_ai_dev;
+GRANT EXECUTE TASK ON ACCOUNT TO ROLE doc_ai_dev;
+
+/*
+Roles for forecasts
+*/
+
+USE ROLE ACCOUNTADMIN;
+GRANT USAGE ON DATABASE  Retail_demo TO ROLE ml_engineer;
+GRANT USAGE ON SCHEMA  Retail_demo.bronze TO ROLE ml_engineer;
+GRANT USAGE ON SCHEMA  Retail_demo.silver TO ROLE ml_engineer;
+GRANT USAGE ON SCHEMA  Retail_demo.gold TO ROLE ml_engineer;
+GRANT CREATE TABLE ON SCHEMA Retail_demo.gold TO ROLE ml_engineer; -- to create the forecast output tables
+GRANT CREATE SNOWFLAKE.ML.FORECAST ON SCHEMA Retail_demo.silver TO ROLE ml_engineer;
+
+-- If using event traces
+GRANT APPLICATION ROLE SNOWFLAKE.EVENTS_ADMIN TO ROLE ml_engineer;
+GRANT APPLICATION ROLE SNOWFLAKE.EVENTS_VIEWER TO ROLE ml_engineer;
